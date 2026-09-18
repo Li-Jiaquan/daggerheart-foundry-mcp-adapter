@@ -12,6 +12,7 @@ interface FoundryCombatRollsActor extends FoundryDocument {
   readonly hasPlayerOwner?: boolean;
   effects?: FoundryCollection<FoundryDocument & { statuses?: unknown }>;
   getRollData?(): unknown;
+  diceRoll?(config: Record<string, unknown>): Promise<unknown>;
 }
 
 interface FoundryCombatRollsToken extends FoundryDocument {

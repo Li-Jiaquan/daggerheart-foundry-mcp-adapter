@@ -146,7 +146,7 @@ const COSMERE_FILTERS: Record<string, Schema> = {
         'Highest tier, 1 to 4'
       ),
     ],
-    'Adversary tier in the Cosmere RPG, 1 to 4, the main measure there for building encounters'
+    'Adversary tier in the Cosmere RPG or Daggerheart, 1 to 4'
   ),
   role: str(
     'Adversary role in the Cosmere RPG such as minion, rival or boss; case does not matter'
@@ -154,13 +154,29 @@ const COSMERE_FILTERS: Record<string, Schema> = {
   hasInvestiture: bool('Only adversaries that use Investiture or Surges (Cosmere RPG)'),
   hitPoints: anyOf(
     [num('One health value'), span('Lowest and highest health, e.g. {"min": 20, "max": 60}')],
-    'Maximum health to match (Cosmere RPG)'
+    'Maximum health or hit point slots to match (Cosmere RPG, Daggerheart)'
   ),
   defensesMin: lowestDefenses,
   deflectMin: num('Deflect at least this much (Cosmere RPG)'),
 };
 
-const OTHER_SYSTEM_FILTERS: Record<string, Schema> = { ...COSMERE_FILTERS, ...FURTHER_FILTERS };
+const DAGGERHEART_FILTERS: Record<string, Schema> = {
+  adversaryType: str('Daggerheart adversary role, e.g. standard, solo, horde or minion'),
+  difficulty: anyOf(
+    [num('One difficulty'), span(undefined, 'Lowest difficulty', 'Highest difficulty')],
+    'Difficulty of a Daggerheart adversary'
+  ),
+  stress: anyOf(
+    [num('One stress maximum'), span(undefined, 'Lowest stress maximum', 'Highest stress maximum')],
+    'Maximum stress slots of a Daggerheart adversary'
+  ),
+};
+
+const OTHER_SYSTEM_FILTERS: Record<string, Schema> = {
+  ...COSMERE_FILTERS,
+  ...FURTHER_FILTERS,
+  ...DAGGERHEART_FILTERS,
+};
 
 const searchFilters = titled(
   shape({
@@ -239,6 +255,7 @@ export const listCreaturesByCriteriaSchema: Schema = shape(
     ...COSMERE_FILTERS,
     alignment: str('Alignment; a part such as "evil" is enough (D&D 5e)'),
     ...FURTHER_FILTERS,
+    ...DAGGERHEART_FILTERS,
     limit: {
       ...num('How many creatures to return: 100 unless given, 1000 at the most'),
       ...{ minimum: 1, maximum: 1000, default: 100 },

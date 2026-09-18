@@ -55,7 +55,7 @@ describe('installServerAreas', () => {
 });
 
 describe('the area lists', () => {
-  it('have the same 22 areas in the same order on both sides', () => {
+  it('have the same 23 areas in the same order on both sides', () => {
     const ids = [
       'journals',
       'scenes',
@@ -79,6 +79,7 @@ describe('the area lists', () => {
       'wfrp4e-cosmere-traveller',
       'mcp-extras',
       'preview-undo',
+      'daggerheart',
     ];
     expect(SERVER_AREAS.map(a => a.id)).toEqual(ids);
     expect(MODULE_AREAS.map(a => a.id)).toEqual(SERVER_AREAS.map(a => a.id));

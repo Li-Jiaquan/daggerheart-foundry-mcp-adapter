@@ -63,7 +63,8 @@ Every change goes through one check in the module, whichever tool asks for it:
 - **Game systems:** the core tools (journals, scenes, compendiums, folders, playlists,
   roll tables, canvas, combat, chat, files) work in every system. System knowledge comes
   from adapters for D&D 5e, Pathfinder Second Edition, Das Schwarze Auge 5, Warhammer
-  Fantasy Roleplay 4e, the Cosmere RPG and Traveller. Without an adapter a tool that
+  Fantasy Roleplay 4e, the Cosmere RPG, Traveller and basic Daggerheart support
+  ([scope and local setup](docs/DAGGERHEART.md)). Without an adapter a tool that
   needs one says so.
 - **Server:** Windows 10 and 11. A macOS bundle is not published yet.
 - **MCP clients:** Claude Desktop (including the Store edition), Claude Code, Cursor and

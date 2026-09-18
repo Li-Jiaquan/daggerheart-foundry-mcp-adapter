@@ -304,11 +304,16 @@ export interface RollPlan {
   formula: string;
   /** Label of the button. */
   label: string;
+  /** A system-native roll configuration, when a module-side adapter can execute one. */
+  native?: {
+    kind: string;
+    config: Record<string, unknown>;
+  };
 }
 
 export interface RollQuestions {
   types: ReadonlyArray<{ id: string; description: string; targets?: readonly string[] }>;
-  /** The formula from the roll data of the actor (plain data), or of no actor. */
+  /** A generic fallback formula; a module may execute `RollPlan.native` instead. */
   plan(request: RollRequest, actor: AdapterDocument | null): RollPlan;
 }
 

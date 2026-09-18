@@ -164,7 +164,7 @@ export const listCreaturesByCriteriaTool: ToolDefinition = {
     'The filters are understood by the adapter of the active game system (D&D 5e: challenge rating, creature type, ' +
     'size, alignment, spells, legendary actions; Pathfinder 2e: level, traits, rarity; DSA5: experience level, species, ' +
     'culture, profession; WFRP4e: species, traits, prayers; Traveller: hits, psionics; Cosmere RPG: tier, role, ' +
-    'defenses) and checked against the creature index. Filters the active system does not know ' +
+    'defenses; Daggerheart: tier, adversaryType, difficulty, hitPoints, stress) and checked against the creature index. Filters the active system does not know ' +
     'are reported as ignored. Without an adapter for the system, filtering is refused and a call without filters lists ' +
     'every actor by name.',
   inputSchema: schema.listCreaturesByCriteriaSchema,

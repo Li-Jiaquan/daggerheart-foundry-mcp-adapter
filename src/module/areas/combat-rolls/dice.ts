@@ -252,6 +252,85 @@ export const rollActorCheck: QueryHandler = {
         );
       }
 
+      if (plan.native?.kind === 'daggerheart-dice-roll') {
+        if (typeof actor.diceRoll !== 'function')
+          return fail(
+            'FOUNDRY_API',
+            `The Daggerheart actor "${actor.name ?? actor.id}" does not expose the native diceRoll API.`
+          );
+        const nativeConfig: Record<string, unknown> = {
+          ...plan.native.config,
+          skips: {
+            ...(isRecord(plan.native.config['skips']) ? plan.native.config['skips'] : {}),
+            createMessage: !toChat,
+          },
+          ...(toChat ? { selectedMessageMode: mode } : {}),
+        };
+        let nativeResult: unknown;
+        try {
+          nativeResult = await actor.diceRoll(nativeConfig);
+        } catch (error) {
+          return fail(
+            'ROLL_FAILED',
+            `The native Daggerheart roll of "${actor.name ?? actor.id}" failed: ${messageOf(error)}`
+          );
+        }
+        if (!isRecord(nativeResult))
+          return fail('ROLL_FAILED', 'The native Daggerheart roll returned no result.');
+        const resourceUpdates = nativeResult['resourceUpdates'];
+        if (!isRecord(resourceUpdates) || typeof resourceUpdates['updateResources'] !== 'function')
+          return fail(
+            'ROLL_FAILED',
+            'The native Daggerheart roll returned no resource update queue; Hope/Fear automation was not applied.'
+          );
+        try {
+          await (resourceUpdates['updateResources'] as () => Promise<unknown>)();
+        } catch (error) {
+          return fail(
+            'ROLL_FAILED',
+            `The native Daggerheart roll was evaluated, but resource updates failed: ${messageOf(error)}`
+          );
+        }
+        const nativeRoll = isRecord(nativeResult['roll']) ? nativeResult['roll'] : {};
+        const duality = isRecord(nativeRoll['result']) ? nativeRoll['result'] : {};
+        const nativeMessage = nativeResult['message'];
+        const chat = toChat
+          ? (() => {
+              const messageId = idOf(nativeMessage);
+              if (!messageId)
+                return fail('NOT_CREATED', 'The native roll message does not read back from chat.');
+              return { messageId, rollMode: mode, visibleTo: 'native Daggerheart message' };
+            })()
+          : null;
+        const notes = chatNotes(args, toChat);
+        return {
+          success: true,
+          actor: {
+            id: actor.id,
+            name: actor.name ?? '',
+            ...(match.token ? { viaToken: match.token } : {}),
+          },
+          gameSystem: system.rawId,
+          adapter: system.title,
+          rollType,
+          rollTarget: rollTarget ?? null,
+          label: plan.label,
+          ...summarizeRoll(nativeRoll),
+          duality: typeof duality['duality'] === 'number' ? duality['duality'] : null,
+          hope: isRecord(nativeRoll['hope']) ? nativeRoll['hope'] : null,
+          fear: isRecord(nativeRoll['fear']) ? nativeRoll['fear'] : null,
+          critical: nativeRoll['isCritical'] === true,
+          resourcesApplied: true,
+          chat,
+          ...(notes.length ? { notes } : {}),
+        };
+      }
+      if (plan.native)
+        return fail(
+          'INVALID_ARGUMENT',
+          `The adapter returned an unknown native roll kind "${plan.native.kind}".`
+        );
+
       const RollClass = rollClassOf();
       checkFormula(RollClass, plan.formula);
       const roll = new RollClass(plan.formula, rollData);

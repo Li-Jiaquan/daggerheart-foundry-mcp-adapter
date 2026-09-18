@@ -27,6 +27,7 @@ import { dsa5Area } from './dsa5/index.js';
 import { wfrp4eCosmereTravellerArea } from './wfrp4e-cosmere-traveller/index.js';
 import { mcpExtrasArea } from './mcp-extras/index.js';
 import { previewUndoArea } from './preview-undo/index.js';
+import { daggerheartArea } from './daggerheart/index.js';
 
 export const MODULE_AREAS: readonly ModuleArea[] = [
   journalsArea,
@@ -51,4 +52,5 @@ export const MODULE_AREAS: readonly ModuleArea[] = [
   wfrp4eCosmereTravellerArea,
   mcpExtrasArea,
   previewUndoArea,
+  daggerheartArea,
 ];

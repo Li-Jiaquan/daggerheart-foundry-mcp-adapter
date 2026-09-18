@@ -63,7 +63,9 @@ const FURTHER = [
   'hasPsionics',
 ];
 const ADDED: Record<string, { top?: string[]; filters?: string[] }> = {
-  'list-creatures-by-criteria': { top: ['alignment', ...FURTHER] },
+  'list-creatures-by-criteria': {
+    top: ['alignment', ...FURTHER, 'adversaryType', 'difficulty', 'stress'],
+  },
   'search-compendium': {
     filters: [
       'tier',
@@ -73,6 +75,9 @@ const ADDED: Record<string, { top?: string[]; filters?: string[] }> = {
       'defensesMin',
       'deflectMin',
       ...FURTHER,
+      'adversaryType',
+      'difficulty',
+      'stress',
     ],
   },
 };
